@@ -1,8 +1,8 @@
 /*
  -----------------------------------------------------------------------------------
- Laboratoire : Labo_2
- Fichier     : main.cpp/h
- Auteur(s)   : Arthur Bécaud
+ Laboratoire : Labo_2_Puzzle_Impossible
+ Fichier     : main.cpp
+ Auteur(s)   : Arthur Bécaud, Loic Geinoz, Gildas Houlmann
  Date        : 06.03.2019
 
  But         :
@@ -13,6 +13,7 @@
  -----------------------------------------------------------------------------------
 */
 #include <cstdlib>
+#include "pieces.h"
 
 using namespace std;
 
