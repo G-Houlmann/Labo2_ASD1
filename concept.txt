@@ -1,0 +1,41 @@
+
+fonction permuter(S,n)
+	si n vaut 1
+		traiter(S)
+	sinon
+		pour i allant de 1 à n, boucler
+			échanger S(i) et S(n)
+			permuter(S,n-1)
+			échanger S(i) et S(n)
+		fin boucler
+	fin si
+	
+	
+PoserPiece(Piece, sensPiece, case){
+vPieces[case] = Piece
+vSens[case] = sensPiece
+}
+
+TournerPiece(case){
+vSens[case]++ modulo 4
+}
+
+Verifier(case, Haut_ou_gauche){
+si haut{
+	si case.haut correspond à case-3.bas  return true
+}
+
+si gauche{
+	Si case.gauche correspond à case-1.droite  return true
+}
+}
+
+
+VerifierToutesJointures(case){
+
+Si case mod 3 > 0 Vérifier() à gauche
+Si case > 2 vérifier() en haut
+
+Verifier(jointure gauche)
+Verifier(jointure droite)
+}
