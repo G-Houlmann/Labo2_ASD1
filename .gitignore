@@ -1,3 +1,21 @@
+#toute la merde de visual studio
+*.suo
+*.db
+*.opendb
+*.ipch
+*.json
+*.sqlite
+*.vcxproj
+*.filters
+*.user
+*.log
+*.tlog
+*.lastbuildstate
+*.idb
+*.pdb
+*.ilk
+*.sln
+
 # Prerequisites
 *.d
 
