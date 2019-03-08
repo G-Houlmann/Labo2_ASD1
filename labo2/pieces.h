@@ -9,8 +9,8 @@
 #ifndef pieces_h
 #define pieces_h
 
-#include <array>
 #include <vector>
+#include <array>
 
 enum AttachementType {
   FILLE_HAUT, FILLE_BAS, DAME_HAUT, DAME_BAS, ARROSOIR_GAUCHE, ARROSOIR_DROIT, GATEAU_GAUCHE, GATEAU_DROIT,  ARROSOIR_INVERSE, NONE };

@@ -7,6 +7,9 @@
 //
 
 #include "pieces.h"
+#include <algorithm>
+
+using namespace std;
 
 const Pieces PIECES = {
   { DAME_HAUT, GATEAU_DROIT, ARROSOIR_GAUCHE, FILLE_HAUT },
@@ -19,3 +22,4 @@ const Pieces PIECES = {
   { DAME_BAS, ARROSOIR_GAUCHE, GATEAU_DROIT, FILLE_HAUT },
   { ARROSOIR_INVERSE, DAME_HAUT, GATEAU_DROIT, FILLE_BAS },
 };
+
