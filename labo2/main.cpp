@@ -52,6 +52,14 @@ bool VerifierJointures(unsigned noCase, vector<unsigned>& sens, vector<unsigned>
 	return estOk;
 }
 
+void tournerPiece(Piece& piece)
+{
+	Piece pieceRetour;
+	for (int i = 0; i < 4; ++i)
+	{
+		pieceRetour[i] = i != 3 ? piece[i + 1] : piece[0];
+	}
+}
 
 int main() {
 	vector<unsigned> sens(9);
@@ -74,7 +82,6 @@ int main() {
 	cout << motifsComplementaires(m5, m7) << endl;
 	cout << motifsComplementaires(m3, m3) << endl;
 	cout << motifsComplementaires(m1, m1) << endl;
-	
 	system("PAUSE");
    return EXIT_SUCCESS;
 }
