@@ -16,6 +16,7 @@
 #include "pieces.h"
 #include <array>
 #include <vector>
+#include <algorithm> // peut etre enlever
 #include <iostream> // pour tests
 
 using namespace std;
@@ -52,21 +53,51 @@ bool VerifierJointures(unsigned noCase, vector<unsigned>& sens, vector<unsigned>
 	return estOk;
 }
 
-void tournerPiece(Piece& piece)
+void tournerPiece(Piece& piece, char sens)
 {
 	Piece pieceRetour;
 	for (int i = 0; i < 4; ++i)
 	{
 		pieceRetour[i] = i != 3 ? piece[i + 1] : piece[0];
+		sens = sens != 'd' ? sens++ : sens = 'a';
 	}
 	piece = pieceRetour;
+}
+
+Piece pieceVide{ NONE, NONE, NONE, NONE };
+vector<Piece> grille{ pieceVide, pieceVide, pieceVide, pieceVide,
+					 pieceVide, pieceVide, pieceVide, pieceVide, pieceVide };
+
+
+void Permuter(unsigned noCase, Pieces piecesRestantes) {
+	// Essaye de poser chaque pièces restantes sur la case
+	char ui = 'a';
+	for (size_t i = 0; i < piecesRestantes.size(); ++i) {
+		for (size_t j = 0; j < 4; ++j) {
+			//tourner puis poser la piece
+			tournerPiece(piecesRestantes[i], ui);
+			grille[noCase] = piecesRestantes[i];
+
+			if (true && noCase != 8) {
+				piecesRestantes.erase(piecesRestantes.begin() + i);
+				Permuter(noCase + 1, piecesRestantes);
+			}
+			else
+			{
+				if (noCase == 8) {
+					cout << " i = " << i << endl << "j = " << j << endl;
+					piecesRestantes = PIECES;
+				}
+			}
+		}
+	}
 }
 
 int main() {
 	vector<unsigned> sens(9);
 	vector<unsigned> ordrePieces(9);
 
-	AttachementType m1 = AttachementType::ARROSOIR_DROIT;
+	/*AttachementType m1 = AttachementType::ARROSOIR_DROIT;
 	AttachementType m2 = AttachementType::ARROSOIR_GAUCHE;
 	AttachementType m3 = AttachementType::ARROSOIR_INVERSE;
 	AttachementType m4 = AttachementType::NONE;
@@ -82,7 +113,11 @@ int main() {
 	cout << motifsComplementaires(m7, m5) << endl;
 	cout << motifsComplementaires(m5, m7) << endl;
 	cout << motifsComplementaires(m3, m3) << endl;
-	cout << motifsComplementaires(m1, m1) << endl;
+	cout << motifsComplementaires(m1, m1) << endl;*/
+	Pieces copiePieces = PIECES;
+
+	Permuter(0, copiePieces);
+
 	system("PAUSE");
    return EXIT_SUCCESS;
 }
