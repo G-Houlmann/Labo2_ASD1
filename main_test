@@ -1,0 +1,140 @@
+/*
+ -----------------------------------------------------------------------------------
+ Laboratoire : Labo_2_Puzzle_Impossible
+ Fichier     : main.cpp
+ Auteur(s)   : Arthur Bécaud, Loic Geinoz, Gildas Houlmann
+ Date        : 06.03.2019
+
+ But         :
+
+ Remarque(s) :
+
+ Compilateur : MinGW-g++ 6.3.0
+ -----------------------------------------------------------------------------------
+*/
+#include <cstdlib>
+#include <iostream>
+#include <iomanip>
+#include <algorithm>
+#include "pieces.h"
+
+using namespace std;
+
+using Sens = vector<unsigned>;
+
+void tournerPiece(const size_t indiceCase, Pieces cases);
+
+bool verifierMotifs(AttachementType motif1, AttachementType motif2);
+
+bool verifierJointures(const size_t indiceCase, const Pieces& cases);
+
+string codeGrille();
+
+void permutationRecursive(size_t indiceCase, Pieces cases, Pieces piecesRestantes, vector<string>& solutions);
+
+int main() {
+
+   const unsigned NB_PIECES = 9;
+
+   Pieces cases(NB_PIECES),
+           piecesRestantes = PIECES;
+   vector<string> solutions;
+
+   permutationRecursive(0, cases, piecesRestantes, solutions);
+
+   return EXIT_SUCCESS;
+}
+
+void tournerPiece(const size_t indiceCase, Pieces cases) {
+   rotate(cases.at(indiceCase).begin(), cases.at(indiceCase).begin() + 1, cases.at(indiceCase).end());
+}
+
+bool verifierMotifs(AttachementType motif1, AttachementType motif2) {
+   // Si motif 8 ou 9 -> motifs incomparables
+   if(motif1 < 8 or motif2 < 8) {
+      return false;
+   }
+
+   unsigned motifCorrespondant = (unsigned) (motif1 + (motif1 % 2 ? -1 : 1));
+
+   return motifCorrespondant == (unsigned) motif2;
+}
+
+bool verifierJointures(const size_t indiceCase, const Pieces& cases) {
+
+   // Détecte si première case
+   if (!indiceCase)
+      return true;
+
+   // Détecter pas ligne 1
+   if (indiceCase > 2) {
+
+      AttachementType motifCaseSuperieur = cases.at(indiceCase - 3).at(2);
+      AttachementType motifCaseInferieur = cases.at(indiceCase).at(0);
+
+      if (verifierMotifs(motifCaseSuperieur, motifCaseInferieur))
+         return false;
+
+      /*
+      cout << "Test motif joiture horizontal :" << endl;
+      cout << "Case haut " << indiceCase - 3 << " : m = " << motifCaseSuperieur << endl
+           << "Case bas  " << indiceCase << " : m = " << motifCaseInferieur << endl << endl;
+      */
+   }
+
+   if(indiceCase % 3) {
+
+      AttachementType motifCaseGauche = cases.at(indiceCase - 1).at(1);
+      AttachementType motifCaseDroite = cases.at(indiceCase).at(3);
+
+      // Vérifier à gauche
+      if (verifierMotifs(motifCaseGauche, motifCaseDroite))
+         return false;
+   }
+
+   /*
+   cout << "Test motif joiture horizontal :" << endl;
+   cout << "Case haut " << indiceCase - 1 << " : m = " << motifCaseGauche << endl
+        << "Case bas  " << indiceCase << " : m = " << motifCaseDroite << endl << endl;
+    */
+   return true;
+}
+
+void permutationRecursive(size_t indiceCase, Pieces cases, Pieces piecesRestantes, vector<string>& solutions) {
+
+   // Essaye de poser chaque pièces restantes sur la case
+   for (size_t i = 0; i < piecesRestantes.size(); ++i) {
+      // Pose la pièce
+      cases.push_back(piecesRestantes.back());
+
+      // Supprime la pièce de pieceRestante
+      piecesRestantes.pop_back();
+
+      // Essaye toutes les rotations
+      for (size_t j = 0; j < 4; ++j) {
+
+         // Si première instance de la boucle -> ne tourne pas la pièce
+         if (j)
+            tournerPiece(indiceCase, cases);
+
+         // Vérifie si la pièce placée est validé
+         if (verifierJointures(indiceCase, cases)) {
+
+            // Si fin de branche
+            if (indiceCase == 8) {
+               cout << "Solution trouvée!" << endl;
+            } else {
+               // Appel la récursion
+               permutationRecursive(indiceCase + 1, cases, piecesRestantes, solutions);
+            }
+
+         }
+      }
+
+      piecesRestantes.push_back(cases.back());
+
+      // Supprime la pièce de la case
+      cases.pop_back();
+
+   }
+}
