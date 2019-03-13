@@ -59,6 +59,7 @@ void tournerPiece(Piece& piece)
 	{
 		pieceRetour[i] = i != 3 ? piece[i + 1] : piece[0];
 	}
+	piece = pieceRetour;
 }
 
 int main() {
