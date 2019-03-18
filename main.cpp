@@ -6,9 +6,9 @@
  Date        : 18.03.2019
 
  But         : Mise à disposition d'une fonction récursive pour chercher toutes les
-               solutions possibles d'un puzzle impossible.
-               Les solutions sont rendues sous la forme d'un code indiquant chaque
-               la position et la rotation de chaque pièce dans la grille su puzzle.
+               solutions possibles d'un puzzle 'impossible'.
+               Les solutions sont rendues sous la forme d'un code indiquant la
+               position et rotation de toutes les pièces dans la grille du puzzle.
                Exemple '1b 5d 4a 7a 6a 2a 8a 3a 9d', les numéros '123456789'
                représentent les pièces et les lettres 'abcd' donnent les rotations.
 
@@ -185,7 +185,7 @@ void permutationRecursive(const Pieces& piecesAEssayer, vector<string>& solution
                if (grille.size() == 9) {
                   solutions.push_back(solutionCourante);
                } else {
-                  // Appel à la récursivité
+                  // Appel à la récursivité en incrémentant l'indice de la case courante
                   ++indiceCase;
                   permutationRecursive(piecesAEssayer, solutions, solutionCourante);
                   // Lors de la fin de la récursivité, l'indice de case est décrémenté
