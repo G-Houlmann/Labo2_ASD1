@@ -2,13 +2,18 @@
  -----------------------------------------------------------------------------------
  Laboratoire : Labo_2_Puzzle_Impossible
  Fichier     : main.cpp
- Auteur(s)   : Arthur Bécaud, Loic Geinoz, Gildas Houlmann
- Date        : 06.03.2019
+ Auteur(s)   : Arthur Bécaud, Loic Geinoz et Gildas Houlmann
+ Date        : 18.03.2019
 
  But         : Mise à disposition d'une fonction récursive pour chercher toutes les
-               solutions possibles au puzzle.
+               solutions possibles d'un puzzle impossible.
+               Les solutions sont rendues sous la forme d'un code indiquant chaque
+               la position et la rotation de chaque pièce dans la grille su puzzle.
+               Exemple '1b 5d 4a 7a 6a 2a 8a 3a 9d', les numéros '123456789'
+               représentent les pièces et les lettres 'abcd' donnent les rotations.
 
- Remarque(s) : -
+ Remarque(s) : Toutes les solutions sont vérifiables sur le site suivant :
+               https://ocuisenaire.github.io/ASD1-Labs/puzzle/
 
  Compilateur : MinGW-g++ 6.3.0
  -----------------------------------------------------------------------------------
@@ -45,6 +50,22 @@ bool verifierMotifs(AttachementType motif1, AttachementType motif2);
  * @return Vrai si la pièce est compatible
  */
 bool verifierJointures(size_t indiceCase, const Pieces& grille);
+
+/**
+ * @brief Vérifie qu'une pièce ne se trouve pas déjà dans la grille
+ * @param numPiece Le numéro de la pièce
+ * @param listePiecesPlacees Liste indiquant quelles pièces sont déjà placées
+ * @return Vrai si la pièce n'est pas trouvée
+ */
+bool piecePasPresenteDansLaGrille(const size_t& numPiece, const vector<unsigned>& listePiecesPlacees);
+
+/**
+ * @brief Converti une pièce et sa rotation sous forme '1a', '3b', etc
+ * @param numPiece Numéro de la pièce
+ * @param rotation Rotation de la pièce
+ * @return Code de la pièce, exemple '4c'
+ */
+string codePieceEtRotation(const size_t& numPiece, const size_t& rotation);
 
 /**
  * @brief Fonction résursive de recherche des solutions du puzzle
@@ -122,9 +143,19 @@ bool verifierJointures(size_t indiceCase, const Pieces& grille) {
    return true;
 }
 
+bool piecePasPresenteDansLaGrille(const size_t& numPiece, const vector<unsigned>& listePiecesPlacees) {
+   return find(listePiecesPlacees.begin(), listePiecesPlacees.end(), numPiece) == listePiecesPlacees.end();
+}
+
+string codePieceEtRotation(const size_t& numPiece, const size_t& rotation) {
+   // Boucle rotation : quand j == 1 -> sens 'd'
+   //                         j == 3 -> sens 'b'
+   return to_string(numPiece + 1) + (char) ('a' + (unsigned) (rotation % 2 ? 4 - rotation : rotation));
+}
+
 void permutationRecursive(const Pieces& piecesAEssayer, vector<string>& solutions, string solutionCourante) {
 
-   static Pieces cases;
+   static Pieces grille;
    static vector<unsigned> piecesPlaces;
    static size_t indiceCase = 0;
 
@@ -132,10 +163,10 @@ void permutationRecursive(const Pieces& piecesAEssayer, vector<string>& solution
    for (size_t i = 0; i < piecesAEssayer.size(); ++i) {
 
       // Si première pièce ou si la pièceAEssayer n'est pas déjà sur la grille
-      if (cases.empty() or find(piecesPlaces.begin(), piecesPlaces.end(), i) == piecesPlaces.end()) {
+      if (grille.empty() or piecePasPresenteDansLaGrille(i, piecesPlaces)) {
 
          // Pose la pièce et l'ajoute au suivi des pièces placées
-         cases.push_back(piecesAEssayer.at(i));
+         grille.push_back(piecesAEssayer.at(i));
          piecesPlaces.push_back(i);
 
          // Essaye chaque rotation
@@ -143,17 +174,15 @@ void permutationRecursive(const Pieces& piecesAEssayer, vector<string>& solution
 
             // Permet de tourner 3 fois la case
             if (j)
-               tournerPiece(indiceCase, cases);
+               tournerPiece(indiceCase, grille);
 
             // Si la pièce placé est valide
-            if (verifierJointures(indiceCase, cases)) {
+            if (verifierJointures(indiceCase, grille)) {
                // Ajoute la nouvelle pièce à la solution courante
-               // Boucle rotation : quand j == 1 -> sens 'd'
-               //                         j == 3 -> sens 'b'
-               solutionCourante += to_string(i + 1) + (char) ('a' + (unsigned)(j == 1 ? 3 : j == 3 ? 1 : j)) + " ";
+               solutionCourante += codePieceEtRotation(i,j) + " ";
 
-               // Si la solutionCourant est complète
-               if (cases.size() == 9) {
+               // Si la grille est complète
+               if (grille.size() == 9) {
                   solutions.push_back(solutionCourante);
                } else {
                   // Appel à la récursivité
@@ -166,9 +195,8 @@ void permutationRecursive(const Pieces& piecesAEssayer, vector<string>& solution
                solutionCourante = solutionCourante.substr(0, solutionCourante.size() - 3);
             }
          }
-
          // Supprime la pièce de la grille et enlève la pièce du suivi des pièces placées
-         cases.pop_back();
+         grille.pop_back();
          piecesPlaces.pop_back();
       }
    }
