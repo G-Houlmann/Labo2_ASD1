@@ -155,7 +155,7 @@ void permutationRecursive(const Pieces& piecesAEssayer, vector<string>& solution
    static vector<unsigned> piecesPlaces;
    static size_t indiceCase = 0;
 
-   // Essaye de poser toutes les pièces restantes à l'indice de case courant
+   // Essaye de poser toutes les pièces restantes à l'indice de case courante
    for (size_t i = 0; i < piecesAEssayer.size(); ++i) {
 
       // Si première pièce ou si la pièceAEssayer n'est pas déjà sur la grille
