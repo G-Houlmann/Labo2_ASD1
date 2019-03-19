@@ -2,7 +2,7 @@
  -----------------------------------------------------------------------------------
  Laboratoire : Labo_2_Puzzle_Impossible
  Fichier     : main.cpp
- Auteur(s)   : Arthur Bécaud, Loic Geinoz et Gildas Houlmann
+ Auteur(s)   : Arthur Bécaud, Loïc Geinoz et Gildas Houlmann
  Date        : 18.03.2019
 
  But         : Mise à disposition d'une fonction récursive pour chercher toutes les
@@ -139,7 +139,7 @@ bool verifierJointures(size_t indiceCase, const Pieces& grille) {
          return false;
    }
 
-   // Pièce validée s'il est passe tous les tests
+   // Pièce validée si elle a passé tous les tests
    return true;
 }
 
@@ -159,7 +159,7 @@ void permutationRecursive(const Pieces& piecesAEssayer, vector<string>& solution
    static vector<unsigned> piecesPlaces;
    static size_t indiceCase = 0;
 
-   // Essaye de poser chaque pièces restantes
+   // Essaye de poser chaque pièce restante
    for (size_t i = 0; i < piecesAEssayer.size(); ++i) {
 
       // Si première pièce ou si la pièceAEssayer n'est pas déjà sur la grille
@@ -176,7 +176,7 @@ void permutationRecursive(const Pieces& piecesAEssayer, vector<string>& solution
             if (j)
                tournerPiece(indiceCase, grille);
 
-            // Si la pièce placé est valide
+            // Si la pièce placée est valide
             if (verifierJointures(indiceCase, grille)) {
                // Ajoute la nouvelle pièce à la solution courante
                solutionCourante += codePieceEtRotation(i,j) + " ";
