@@ -1,22 +1,16 @@
-/*
- -----------------------------------------------------------------------------------
- Laboratoire : Labo_2_Puzzle_Impossible
- Fichier     : main.cpp
- Auteur(s)   : Arthur Bécaud, Loïc Geinoz et Gildas Houlmann
- Date        : 18.03.2019
+/**
+ \file main.cpp
+ \author Arthur Bécaud, Loïc Geinoz et Gildas Houlmann
+ \date 18.03.2019
+ Labo 2 : Mise à disposition d'une fonction récursive pour chercher toutes les
+          solutions possibles d'un puzzle 'impossible'.
+          Les solutions sont rendues sous la forme d'un code indiquant la
+          position et rotation de toutes les pièces dans la grille du puzzle.
+          Exemple '1b 5d 4a 7a 6a 2a 8a 3a 9d', les numéros '123456789'
+          représentent les pièces et les lettres 'abcd' donnent les rotations.
 
- But         : Mise à disposition d'une fonction récursive pour chercher toutes les
-               solutions possibles d'un puzzle 'impossible'.
-               Les solutions sont rendues sous la forme d'un code indiquant la
-               position et rotation de toutes les pièces dans la grille du puzzle.
-               Exemple '1b 5d 4a 7a 6a 2a 8a 3a 9d', les numéros '123456789'
-               représentent les pièces et les lettres 'abcd' donnent les rotations.
-
- Remarque(s) : Toutes les solutions sont vérifiables sur le site suivant :
-               https://ocuisenaire.github.io/ASD1-Labs/puzzle/
-
- Compilateur : MinGW-g++ 6.3.0
- -----------------------------------------------------------------------------------
+          Toutes les solutions sont vérifiables sur le site suivant :
+          https://ocuisenaire.github.io/ASD1-Labs/puzzle/
 */
 #include <cstdlib>
 #include <iostream>
@@ -39,7 +33,7 @@ void tournerPiece(size_t indiceCase, Pieces& grille);
  * @brief Vérifie si deux motifs sont compatibles
  * @param motif1
  * @param motif2
- * @return Vrai si les deux motifs sont valides
+ * @return Vrai si les deux motifs sont compatibles
  */
 bool verifierMotifs(AttachementType motif1, AttachementType motif2);
 
@@ -52,7 +46,7 @@ bool verifierMotifs(AttachementType motif1, AttachementType motif2);
 bool verifierJointures(size_t indiceCase, const Pieces& grille);
 
 /**
- * @brief Vérifie qu'une pièce ne se trouve pas déjà dans la grille
+ * @brief Vérifie qu'une certaine pièce ne se trouve pas déjà dans la grille
  * @param numPiece Le numéro de la pièce
  * @param listePiecesPlacees Liste indiquant quelles pièces sont déjà placées
  * @return Vrai si la pièce n'est pas trouvée
@@ -81,6 +75,7 @@ int main() {
 
    permutationRecursive(PIECES, solutions);
 
+   // Affichage des solutions
    cout << "-------- " << solutions.size() << " Solutions -------- " << endl;
    for (const string& solution : solutions) {
       cout << solution << endl;
@@ -90,7 +85,7 @@ int main() {
 }
 
 void tournerPiece(size_t indiceCase, Pieces& grille) {
-   // Recule les grille du vecteur : [1,2,3,4] -> [2,3,4,1]
+   // Recule les éléments du vecteur : [1,2,3,4] -> [2,3,4,1]
    rotate(grille.at(indiceCase).begin(), grille.at(indiceCase).begin() + 3, grille.at(indiceCase).end());
 }
 
@@ -108,7 +103,7 @@ bool verifierMotifs(AttachementType motif1, AttachementType motif2) {
 
 bool verifierJointures(size_t indiceCase, const Pieces& grille) {
 
-   // Si première case
+   // Jointure valide automaitquement si première case de la grille
    if (!indiceCase)
       return true;
 
@@ -121,6 +116,7 @@ bool verifierJointures(size_t indiceCase, const Pieces& grille) {
       // Motif du haut de la casse courante de l'indice de case choisit
       AttachementType motifCaseInferieur = grille.at(indiceCase).at(0);
 
+      // Vérification des deux motifs
       if (!verifierMotifs(motifCaseSuperieur, motifCaseInferieur))
          return false;
    }
@@ -134,7 +130,7 @@ bool verifierJointures(size_t indiceCase, const Pieces& grille) {
       // Motif de gauche de la casse courante de l'indice de case choisit
       AttachementType motifCaseDroite = grille.at(indiceCase).at(3);
 
-      // Vérifier à gauche
+      // Vérification des deux motifs
       if (!verifierMotifs(motifCaseGauche, motifCaseDroite))
          return false;
    }
@@ -159,7 +155,7 @@ void permutationRecursive(const Pieces& piecesAEssayer, vector<string>& solution
    static vector<unsigned> piecesPlaces;
    static size_t indiceCase = 0;
 
-   // Essaye de poser chaque pièce restante
+   // Essaye de poser toutes les pièces restantes à l'indice de case courant
    for (size_t i = 0; i < piecesAEssayer.size(); ++i) {
 
       // Si première pièce ou si la pièceAEssayer n'est pas déjà sur la grille
@@ -169,10 +165,10 @@ void permutationRecursive(const Pieces& piecesAEssayer, vector<string>& solution
          grille.push_back(piecesAEssayer.at(i));
          piecesPlaces.push_back(i);
 
-         // Essaye chaque rotation
+         // Essaye chaque rotation d'une pièce
          for (size_t j = 0; j < 4; ++j) {
 
-            // Permet de tourner 3 fois la case
+            // Permet de tourner 3 fois la pièce
             if (j)
                tournerPiece(indiceCase, grille);
 
@@ -183,6 +179,7 @@ void permutationRecursive(const Pieces& piecesAEssayer, vector<string>& solution
 
                // Si la grille est complète
                if (grille.size() == 9) {
+                  // Ajoute la solution courante à la liste des solutions
                   solutions.push_back(solutionCourante);
                } else {
                   // Appel à la récursivité en incrémentant l'indice de la case courante
